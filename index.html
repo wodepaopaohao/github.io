@@ -1,9 +1,320 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="zh-CN">
   <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>入场凭证</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #eef2fb;
+        --card: #ffffff;
+        --text: #222222;
+        --muted: #7d828d;
+        --line: #e7ebf3;
+        --blue: #5f88df;
+        --orange: #ff7648;
+        --green: #55d07a;
+        --black: #222222;
+      }
+
+      body {
+        min-height: 100vh;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+          "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        background:
+          linear-gradient(180deg, #e8edf8 0%, #edf1fa 18%, #f2f5fc 48%, #f9fbff 100%);
+        color: var(--text);
+      }
+
+      .page {
+        position: relative;
+        min-height: 100vh;
+        max-width: 460px;
+        margin: 0 auto;
+        padding-bottom: 56px;
+      }
+
+      .content {
+        padding: 46px 18px 0;
+      }
+
+      .result-card {
+        position: relative;
+        background: var(--card);
+        border-radius: 6px;
+        padding: 72px 18px 24px;
+        box-shadow: 0 1px 0 rgba(34, 34, 34, 0.02);
+      }
+
+      .success-icon {
+        position: absolute;
+        top: -38px;
+        left: 50%;
+        width: 80px;
+        height: 80px;
+        margin-left: -40px;
+        border-radius: 50%;
+        background: var(--green);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .success-icon::before {
+        content: "";
+        width: 24px;
+        height: 40px;
+        border-right: 8px solid #fff;
+        border-bottom: 8px solid #fff;
+        transform: translateY(-3px) rotate(45deg);
+      }
+
+      .result-title {
+        text-align: center;
+        font-size: 24px;
+        font-weight: 600;
+        letter-spacing: 1px;
+      }
+
+      .result-time {
+        margin-top: 26px;
+        text-align: center;
+        color: var(--orange);
+        font-size: 56px;
+        line-height: 1;
+        font-weight: 700;
+        letter-spacing: 1px;
+        font-variant-numeric: tabular-nums;
+        transition: color 0.3s linear;
+      }
+
+      .result-time.is-animating {
+        animation: time-blink 0.28s ease-out;
+      }
+
+      @keyframes time-blink {
+        0% {
+          opacity: 1;
+        }
+
+        45% {
+          opacity: 0.4;
+        }
+
+        100% {
+          opacity: 1;
+        }
+      }
+
+      .venue {
+        margin-top: 44px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: 600;
+      }
+
+      .entry-meta {
+        margin-top: 12px;
+        text-align: center;
+        font-size: 15px;
+        color: #4b4f58;
+        line-height: 1.6;
+      }
+
+      .entry-meta a {
+        color: #6d8ce0;
+        text-decoration: none;
+      }
+
+      .phone {
+        display: inline-flex;
+        width: 13px;
+        height: 13px;
+        margin-left: 2px;
+        vertical-align: -1px;
+        color: #6d8ce0;
+      }
+
+      .phone svg {
+        width: 100%;
+        height: 100%;
+        fill: currentColor;
+      }
+
+      .member {
+        margin-top: 10px;
+        text-align: center;
+        font-size: 15px;
+        color: #4b4f58;
+      }
+
+      .tips {
+        margin-top: 26px;
+        padding: 0 2px;
+      }
+
+      .tips-title {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 16px;
+        font-weight: 600;
+        color: #444a54;
+      }
+
+      .tips-icon {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 1.5px solid var(--blue);
+        color: var(--blue);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        line-height: 1;
+      }
+
+      .tips-list {
+        margin-top: 12px;
+        list-style: none;
+      }
+
+      .tips-list li {
+        position: relative;
+        padding-left: 16px;
+        margin-bottom: 8px;
+        color: #80858f;
+        font-size: 15px;
+        line-height: 1.5;
+      }
+
+      .tips-list li::before {
+        content: "";
+        position: absolute;
+        left: 2px;
+        top: 10px;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #5e8ae4;
+      }
+
+      .back-button {
+        display: block;
+        width: 290px;
+        height: 46px;
+        margin: 86px auto 0;
+        border: 1.5px solid #7ba0ef;
+        border-radius: 24px;
+        background: transparent;
+        color: #6c8fdf;
+        font-size: 16px;
+        font-weight: 600;
+      }
+
+      @media (max-width: 420px) {
+        .result-time {
+          font-size: 48px;
+        }
+
+        .venue,
+        .entry-meta,
+        .member,
+        .tips-list li {
+          font-size: 14px;
+        }
+
+        .back-button {
+          width: 78%;
+        }
+      }
+    </style>
   </head>
   <body>
-    <div id="app"></div>
-    hello
+    <div class="page">
+      <main class="content">
+        <section class="result-card">
+          <div class="success-icon" aria-hidden="true"></div>
+          <h1 class="result-title">入场成功</h1>
+          <div class="result-time" id="current-time">12:15:38</div>
+          <div class="venue">Mypals健身游泳（西坝河店）</div>
+          <div class="entry-meta">
+            入场时间 <span id="entry-time">2026-06-08 12:15</span>&nbsp;&nbsp;场馆负责人
+            <a href="tel:13800138000">战国鹏</a>
+            <span class="phone" aria-hidden="true">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M6.62 10.79a15.54 15.54 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24c1.11.37 2.29.56 3.5.56a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C11.85 21 3 12.15 3 1.99a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.21.19 2.39.56 3.5a1 1 0 0 1-.24 1.01l-2.2 2.29Z"
+                />
+              </svg>
+            </span>
+          </div>
+          <div class="member">字节同学 ZJ3****5203</div>
+        </section>
+
+        <section class="tips">
+          <div class="tips-title"><span class="tips-icon">i</span><span>健身提示</span></div>
+          <ul class="tips-list">
+            <li>
+              健身前请评估自身健康状况，心血管疾病、关节损伤等患者需遵医嘱。如训练过程中感到不适或受伤，请立即停止并及时与场馆服务人员联系。
+            </li>
+            <li>训练前请充分热身10-15分钟，结束后进行拉伸放松，避免过量运动导致损伤。</li>
+            <li>请穿着合身运动服及运动鞋到场进行训练。</li>
+            <li>仅限员工本人使用，不可转让或让他人使用。</li>
+          </ul>
+        </section>
+
+        <button class="back-button" type="button" onclick="history.back()">返回</button>
+      </main>
+    </div>
+    <script>
+      const timeElement = document.getElementById("current-time");
+      const entryTimeElement = document.getElementById("entry-time");
+      const timeColors = ["var(--orange)", "var(--green)", "var(--blue)", "var(--black)"];
+      let timeColorIndex = 0;
+
+      function formatDatePart(value) {
+        return String(value).padStart(2, "0");
+      }
+
+      function updateDateTime() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = formatDatePart(now.getMonth() + 1);
+        const day = formatDatePart(now.getDate());
+        const hours = formatDatePart(now.getHours());
+        const minutes = formatDatePart(now.getMinutes());
+        const seconds = formatDatePart(now.getSeconds());
+
+        timeElement.textContent = `${hours}:${minutes}:${seconds}`;
+        entryTimeElement.textContent = `${year}-${month}-${day} ${hours}:${minutes}`;
+      }
+
+      function updateTimeColor() {
+        timeElement.classList.remove("is-animating");
+        void timeElement.offsetWidth;
+        timeElement.style.color = timeColors[timeColorIndex];
+        timeElement.classList.add("is-animating");
+        timeColorIndex = (timeColorIndex + 1) % timeColors.length;
+      }
+
+      updateDateTime();
+      updateTimeColor();
+      setInterval(() => {
+        updateDateTime();
+        updateTimeColor();
+      }, 1000);
+    </script>
   </body>
 </html>
